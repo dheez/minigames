@@ -12,12 +12,15 @@ typedef struct snake{		//struct of the snake (position, direction, pointer to ne
 int maxh;//int for storing the window sizes
 int maxw;
 
-void move(SNAKE* sn){          //function that moves the snake (dumb vector shit)
-	
+void upddir(SNAKE* sn){
 	if(sn->next != NULL){
 		sn->next->dir[0] = sn->hitbox.x-sn->next->hitbox.x;
 		sn->next->dir[1] = sn->hitbox.y-sn->next->hitbox.y;
+		upddir(sn->next);
 	}
+}
+
+void move(SNAKE* sn){          //function that moves the snake (dumb vector shit)
 	sn->oldpos[0] = sn->hitbox.x;
 	sn->oldpos[1] = sn->hitbox.y;
 	sn->hitbox.x += sn->dir[0]; 
@@ -48,12 +51,15 @@ int length(SNAKE *sn){
 }
 
 SDL_bool collision(SNAKE *sn, SNAKE *n ){ //function which tests, if there is a collision with the snake
-	
-	SDL_bool b = SDL_FALSE;
+	upddir(sn);
 	for(SNAKE* x = n; x != NULL; x = x -> next){
-		b = b || SDL_HasIntersection(&sn->hitbox, &x->hitbox);	
+		if(SDL_HasIntersection(&sn->hitbox, &x->hitbox)){
+			if(sn->dir[0]+x->dir[0] != 0 || sn->dir[1]+x->dir[1] != 0){
+				return SDL_TRUE;	
+			}
+		}
 	}	
-	return b;
+	return SDL_FALSE;
 }
 
 SNAKE* last(SNAKE *sn){			//last struct of the snake
