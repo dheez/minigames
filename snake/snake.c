@@ -23,15 +23,15 @@ void move(SNAKE* sn){          //function that moves the snake (dumb vector shit
 	sn->hitbox.x += sn->dir[0]; 
 	sn->hitbox.y += sn->dir[1];
 		if( sn->hitbox.x < 0){
-			sn->hitbox.x = maxw;
+			sn->hitbox.x = maxw-sn->hitbox.w;
 		}
-		if( sn->hitbox.x > maxw){
+		if( sn->hitbox.x+sn->hitbox.w > maxw){
 			sn->hitbox.x = 0;
 		}
 		if( sn->hitbox.y < 0){
-			sn->hitbox.y = maxh;
+			sn->hitbox.y = maxh-sn->hitbox.h;
 		}
-		if( sn->hitbox.y > maxh){
+		if( sn->hitbox.y+sn->hitbox.h > maxh){
 			sn->hitbox.y = 0;
 		}
 	if(sn->next != NULL){

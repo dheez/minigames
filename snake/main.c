@@ -1,4 +1,5 @@
 #include<time.h>
+#include<SDL2/SDL_ttf.h>
 #include "snake.c"
 int get50(int rand);
 int main() 
@@ -10,6 +11,7 @@ int main()
 	SDL_Quit();
 	return 1;
     } 
+    TTF_Init();
     SDL_Window* win = SDL_CreateWindow("SNAKE",				//init Window 
                                        SDL_WINDOWPOS_CENTERED, 
                                        SDL_WINDOWPOS_CENTERED, 
@@ -36,9 +38,19 @@ int main()
 	if(!rend){
 		printf("error with renderer");
 		SDL_DestroyWindow(win);
+		TTF_Quit();
 		SDL_Quit();
 		return 1;
 	}
+	    TTF_Font* font = TTF_OpenFont("/usr/share/fonts/noto/NotoSans-Regular.ttf", 25);
+	    SDL_Color color = {255,255,255};
+	    char scr[50]; 
+	    sprintf(scr, "%d", length(sn));
+	    SDL_Surface* ssur; 
+	    SDL_Texture* sctex;
+	    int scw;
+	    int sch;
+	    SDL_Rect srect = {maxw-50,maxh-50, scw, sch};
 	
 	    SDL_Surface *snak = IMG_Load("snake.png"); //load pictures to surfaces 
 	    SDL_Surface *f = IMG_Load("food.png"); 
@@ -46,6 +58,7 @@ int main()
 		printf("error with creating surfaces");
 		SDL_DestroyWindow(win);
 		SDL_DestroyRenderer(rend);
+		TTF_Quit();
 		SDL_Quit();
 		return 1;
 	}
@@ -65,15 +78,13 @@ int main()
 		printf("error with creating textures");
 		SDL_DestroyWindow(win);
 		SDL_DestroyRenderer(rend);
+		TTF_Quit();
 		SDL_Quit();
 		return 1;
 	}
 	    SDL_FreeSurface(snak); 			//surfaces not needed anymore: free them
 	    SDL_FreeSurface(f);
-            //Update the surface
 		//SDL_SetRenderDrawColor(rend,255,255,255,255);
-		SDL_RenderClear(rend);	
-		SDL_RenderPresent(rend);//show first frame
 
 		SDL_QueryTexture(stex, NULL, NULL, &sn->hitbox.w, &sn->hitbox.h);
 		SDL_QueryTexture(ftex, NULL, NULL, &foodhitbox.w, &foodhitbox.h);
@@ -125,7 +136,15 @@ int main()
 	SDL_QueryTexture(stex, NULL, NULL, &last(sn)->hitbox.w, &last(sn)->hitbox.h);
 	//sprintf(sc, "%d", score);
 	//SDL_QueryTexture(scoretex, NULL, NULL, &scorebox.w, &scorebox.h);
-	//SDL_RenderCopy(rend, scoretex, NULL, &scorebox);
+	 sprintf(scr, "%d", length(sn));
+	ssur = TTF_RenderText_Solid(font, scr, color);
+	sctex = SDL_CreateTextureFromSurface(rend, ssur);
+	srect.x = maxw-50;
+	srect.y = maxh-50;
+	SDL_QueryTexture(sctex, NULL, NULL, &scw, &sch);
+	srect.w = scw;
+	srect.h = sch;
+	SDL_RenderCopy(rend, sctex, NULL, &srect);
 	SDL_RenderCopy(rend, ftex, NULL, &foodhitbox);
 	SDL_RenderPresent(rend);
 	SDL_Delay(8000/144);
@@ -139,6 +158,7 @@ int main()
    SDL_DestroyRenderer(rend);
    SDL_DestroyTexture(stex);
    SDL_DestroyTexture(ftex);
+   TTF_Quit();
    SDL_Quit();
    return 0;
 } 
