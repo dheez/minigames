@@ -18,7 +18,7 @@ int gw;
 int gh;
 int score = 0;
 SDL_bool collision(PIPES* p){
-	if(brd->box.y+brd->box.h >= gh){
+	if(brd->box.y+brd->box.h >= gh || brd->box.y <= 0){
 		return SDL_TRUE;
 	}
 	
