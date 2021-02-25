@@ -2,6 +2,8 @@
 #include<SDL2/SDL_image.h> 
 #include<SDL2/SDL_ttf.h>
 #include<time.h>
+#include<pthread.h>
+#include<unistd.h>
 typedef struct bird{
 	SDL_Rect box;
 	float velocity;
@@ -9,11 +11,13 @@ typedef struct bird{
 
 typedef struct pipes{
 	SDL_Rect boxes[4];
+	int counted;
 	struct pipes* next;
 }PIPES;
 
 const int scrollspeed = 2;
 BIRD* brd;
+PIPES* n;
 int gw;
 int gh;
 int score = 0;
@@ -35,23 +39,32 @@ SDL_bool collision(PIPES* p){
 PIPES* createpipe(){
 		int gap = rand() % (gh-400+1) +200;
 		PIPES* n = (PIPES*)malloc(sizeof(PIPES));
+		n->counted = 0;
 		n->boxes[0] = (SDL_Rect){gw,0,100,gap-75};
 		n->boxes[1] = (SDL_Rect){gw,gap+100,100,gh};
 		n->boxes[2] = (SDL_Rect){gw-25,gap-75,150,50};
 		n->boxes[3] = (SDL_Rect){gw-25,gap+100,150,50};
-		n->next = NULL;
-		return n;
+                n->next = NULL; return n; 
 }
 
 PIPES* lastpipe(PIPES* p){
 	if(p->next != NULL){
-		return lastpipe(p->next);
-	}
+		return lastpipe(p->next); }
 	else{
 		return p;
 	}
 	
 }
+
+void* spawnpipes(void* arg){	
+	while(1){
+		sleep(3);
+		PIPES* new = createpipe();
+		lastpipe(n)->next = new;
+	}
+}
+
+
 
 void move(float speed){
 	brd->box.y -= (int)speed;
@@ -114,7 +127,9 @@ int main(){
 	SDL_FreeSurface(ps);
 	SDL_GetWindowSize(win, &gw, &gh);
 	SDL_RenderClear(rend);
-	PIPES* n = createpipe();
+	n = createpipe();
+	pthread_t tid;
+	pthread_create(&tid,NULL,spawnpipes,NULL);
 	SDL_RenderPresent(rend);
 	brd = (BIRD*)malloc(sizeof(BIRD));	
 	brd->box.x = 100;
@@ -167,15 +182,11 @@ int main(){
 			}
 		}
 		
-		if(n == NULL){
-			printf("test");
-		}
-		if(lastpipe(n)->boxes[0].x == brd->box.x+50){
-			PIPES* ne = createpipe();
-			lastpipe(n)->next = ne;
-		}
-		if(n->boxes[3].x+n->boxes[3].w == brd->box.x-1){
-			score++;
+		if(n->boxes[3].x+n->boxes[3].w <= brd->box.x){
+			if(!n->counted){
+				score++;
+				n->counted = 1;
+			}
 		}
 
 		if(n->boxes[3].x+n->boxes[3].w < 0 && n->next != NULL){
