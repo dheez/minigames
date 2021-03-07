@@ -4,19 +4,27 @@
 ENTITY* enemies[MAX_ENTITYS] = { NULL };
 BULLET* bulletlist[MAX_BULLETS] = { NULL };
 
-int updatePositions(ENTITY* player, ENTITY** ents, BULLET** bullets){
+//update positions of entities and players and bullets per iteration
+int updatePositions(ENTITY* player, ENTITY** ents, BULLET** bullets, MAP* m){
 	//update player position
-	player->hb->x += player->dir[0];
-	player->hb->y += player->dir[1];
+	if(player != NULL){
+		player->hb->x += player->dir[0];
+		player->hb->y += player->dir[1];
+	}
 	//update enemy position
 	for(int i = 0; i < MAX_ENTITYS; i++){
-		ents[i]->hb->x += ents[i]->dir[0];
-		ents[i]->hb->y += ents[i]->dir[1];
+		if(ents[i] != NULL){
+			ents[i]->hb->x += ents[i]->dir[0];
+			ents[i]->hb->y += ents[i]->dir[1];
+		}
+		
 	}
 	//update bullet position
 	for(int i = 0; i < MAX_BULLETS; i++){
-		bullets[i]->hb->x += bullets[i]->dir[0];
-		bullets[i]->hb->y += bullets[i]->dir[1];
+		if(ents[i] != NULL){
+			bullets[i]->hb->x += bullets[i]->dir[0];
+			bullets[i]->hb->y += bullets[i]->dir[1];
+		}
 	}
 	return 0;
 }
@@ -31,7 +39,7 @@ int addEnemy(ENTITY** ents, ENTITY* e){
 	}
 	return 0;
 }
-
+//entity "constructor"
 ENTITY* createEntity(int x, int y, int hp, int de, int wpn){
 	SDL_Rect* rect = (SDL_Rect*)malloc(sizeof(SDL_Rect));
 	rect->x = x;
@@ -44,6 +52,45 @@ ENTITY* createEntity(int x, int y, int hp, int de, int wpn){
 	e->deathevent = de;
 	e->weapon = wpn;
 	return e;
+}
+//destructor
+void destroyEntity(ENTITY** ents, int i){
+	if(ents[i] != NULL){
+		free(ents[i]);
+		ents[i] = NULL;
+	}
+}
+
+int addBullet(BULLET** bullets, BULLET* bullet){
+	for(int i = 0; i < MAX_BULLETS; i++){
+		if(bullets[i] == NULL){
+			bullets[i] = bullet;
+			return 0;
+		}
+	}
+	return 1;
+}
+
+BULLET* createBullet(int wpn, int* dir){
+	BULLET* bullet = (BULLET*)malloc(sizeof(BULLET));
+	int mult = 1;
+	switch(wpn){
+		case 0:
+			break;
+		case 1:
+			break;
+	}
+	bullet->dir[0] = mult*dir[0];
+	bullet->dir[1] = mult*dir[1];
+	return bullet;
+}
+
+void destroyBullet(Bullet** bullets, int i){
+	if(bullets[i] != NULL){
+		free(bullets[i]);
+		bullets[i] = NULL;
+	}
+	
 }
 
 int getDirVector(int* dir, int sx, int sy, int dx, int dy){

@@ -9,7 +9,7 @@ int main(void){
 		return 1;
 	}
 
-	SDL_Window* win = SDL_CreateWindow("Invaders",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,1600,900,0);
+	SDL_Window* win = SDL_CreateWindow("Invaders",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,960,540,0);
 	if(win == NULL){
 		printf("error creating window\n");
 		SDL_Quit();
