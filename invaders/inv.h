@@ -3,6 +3,7 @@
 
 #define MAX_BULLETS 100
 #define MAX_ENTITYS 20
+#define MAX_WORLD_BLOCKS 500
 #define ITEM_CAP 3
 
 typedef struct item{
@@ -11,15 +12,17 @@ typedef struct item{
 }ITEM;
 
 typedef struct bullet{
-	SDL_Rect hb;
-	int dmg;
-	int dir[2];
+	SDL_Rect* hb;
+	int dmg, dir[2];
 }BULLET;
 
 typedef struct entity{
-	SDL_Rect hb;
-	int dir[2], atk, health;
+	SDL_Rect* hb;
+	int dir[2], reldir[2], atk, health, deathevent, weapon;
 	ITEM* items[ITEM_CAP];
-	int deathevent;
 }ENTITY;
+
+typedef struct map{
+	SDL_Rect* world[MAX_WORLD_BLOCKS];
+}MAP;
 

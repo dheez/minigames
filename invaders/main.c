@@ -1,4 +1,5 @@
 #include "inv.h"
+#include<time.h>
 
 int main(void){
 
@@ -23,6 +24,17 @@ int main(void){
 		SDL_Quit();
 		return 1;
 	}
+
+	SDL_Cursor* cursor = SDL_GetCursor();
+	if(!cursor){
+		printf("couldn't create cursor\n");
+		SDL_DestroyWindow(win);
+		SDL_Quit();
+		return 1;
+	}
+	
+	SDL_RenderClear(rend);
+	SDL_RenderPresent(rend);
 	SDL_Delay(5000);
 	SDL_Quit();
 	return 0;
