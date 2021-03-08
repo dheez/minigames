@@ -35,6 +35,38 @@ int main(void){
 	
 	SDL_RenderClear(rend);
 	SDL_RenderPresent(rend);
+
+	SDL_Event e;
+	int quit = 0;
+	
+	while( !quit ){
+		
+		while(SDL_PollEvent(&e)){
+			switch(e.type){
+				case SDL_QUIT:
+					quit = 1;
+					break;
+				
+				case SDL_KEYDOWN:
+					switch(e.key.keysym.scancode){
+						case SDL_SCANCODE_W:
+							break;
+						case SDL_SCANCODE_S:
+							break;
+						case SDL_SCANCODE_A:
+							break;
+						case SDL_SCANCODE_D:
+							break;
+						default:
+							break;
+					}
+			}
+		}
+		
+	}
+	
+
+
 	SDL_Delay(5000);
 	SDL_Quit();
 	return 0;

@@ -85,7 +85,7 @@ BULLET* createBullet(int wpn, int* dir){
 	return bullet;
 }
 
-void destroyBullet(Bullet** bullets, int i){
+void destroyBullet(BULLET** bullets, int i){
 	if(bullets[i] != NULL){
 		free(bullets[i]);
 		bullets[i] = NULL;
