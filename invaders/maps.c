@@ -1,6 +1,6 @@
 #include "inv.h"
 
-MAP* maps[MAX_MAPS];
+//MAP* maps[MAX_MAPS];
 
 MAP* testMap(void){
 	MAP* test = (MAP*)malloc(sizeof(MAP));
@@ -9,7 +9,7 @@ MAP* testMap(void){
 	return test;
 }
 
-int addMap(MAP** maps, Map* map){
+int addMap(MAP** maps, MAP* map){
 	for(int i = 0; i < MAX_MAPS; i++){
 		if(maps[i] == NULL){
 			maps[i] = map;
@@ -20,11 +20,12 @@ int addMap(MAP** maps, Map* map){
 }
 void freeMap(MAP* m){
 	for(int i = 0; i < MAX_WORLD_BLOCKS; i++){
-		if(world[i] != NULL){
-			free(world[i]);
+		if(m->world[i] != NULL){
+			free(m->world[i]);
 		}
-		if(visible[i] != NULL){
-			free(visible[i]);
+		if(m->visible[i] != NULL){
+			free(m->visible[i]);
 		}
 	}
+	free(m);
 }

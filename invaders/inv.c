@@ -1,11 +1,11 @@
 #include "inv.h"
 #include<math.h>
 
-ENTITY* enemies[MAX_ENTITYS] = { NULL };
-BULLET* bulletlist[MAX_BULLETS] = { NULL };
+//ENTITY* enemies[MAX_ENTITYS] = { NULL };
+//BULLET* bulletlist[MAX_BULLETS] = { NULL };
 
 //update positions of entities and players and bullets per iteration
-int updatePositions(ENTITY* player, ENTITY** ents, BULLET** bullets, MAP* m){
+int updatePositions(ENTITY* player, ENTITY** ents, BULLET** bullets){
 	//update player position
 	if(player != NULL){
 		player->hb->x += player->dir[0];
@@ -21,7 +21,7 @@ int updatePositions(ENTITY* player, ENTITY** ents, BULLET** bullets, MAP* m){
 	}
 	//update bullet position
 	for(int i = 0; i < MAX_BULLETS; i++){
-		if(ents[i] != NULL){
+		if(bullets[i] != NULL){
 			bullets[i]->hb->x += bullets[i]->dir[0];
 			bullets[i]->hb->y += bullets[i]->dir[1];
 		}
@@ -34,16 +34,18 @@ int addEnemy(ENTITY** ents, ENTITY* e){
 	for(int i = 0; i < MAX_ENTITYS; i++){
 		if(ents[i] == NULL){
 			ents[i] = e;
-			break;
+			return 0;
 		}
 	}
-	return 0;
+	return 1;
 }
 //entity "constructor"
-ENTITY* createEntity(int x, int y, int hp, int de, int wpn){
+ENTITY* createEntity(int x, int y,int w, int h, int hp, int de, int wpn){
 	SDL_Rect* rect = (SDL_Rect*)malloc(sizeof(SDL_Rect));
 	rect->x = x;
 	rect->y = y;
+	rect->w = w;
+	rect->h = h;
 	ENTITY* e = (ENTITY*)malloc(sizeof(ENTITY));
 	e->dir[0] = 0;
 	e->dir[1] = 0;

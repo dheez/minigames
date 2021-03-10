@@ -54,9 +54,7 @@ SDL_bool collision(SNAKE *sn, SNAKE *n ){ //function which tests, if there is a 
 	upddir(sn);
 	for(SNAKE* x = n; x != NULL; x = x -> next){
 		if(SDL_HasIntersection(&sn->hitbox, &x->hitbox)){
-			if(sn->dir[0]+x->dir[0] != 0 || sn->dir[1]+x->dir[1] != 0){
 				return SDL_TRUE;	
-			}
 		}
 	}	
 	return SDL_FALSE;

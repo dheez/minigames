@@ -28,3 +28,13 @@ typedef struct map{
 	SDL_Rect* visible[MAX_WORLD_BLOCKS];
 }MAP;
 
+int updatePositions(ENTITY* player, ENTITY** ents, BULLET** bullets);
+ENTITY* createEntity(int x, int y, int w, int h, int hp, int de, int wpn);
+void destroyEntity(ENTITY** ents, int i);
+int addEnemy(ENTITY** ents, ENTITY* e);
+BULLET* createBullet(int wpn, int* dir);
+void destroyBullet(BULLET** bullets, int i);
+int addBullet(BULLET** bullets, BULLET* bullet);
+int getDirVector(int* dir, int sx, int sy, int dx, int dy);
+
+int renderEntities(SDL_Renderer* rend, ENTITY** entities, ENTITY* player);

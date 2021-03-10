@@ -1,4 +1,4 @@
 CC=gcc
 CFLAGS=-Wall -lSDL2 -lSDL2_image -lm
 main:
-	$(CC) -o game main.c inv.c $(CFLAGS)
+	$(CC) -o game -g main.c inv.c maps.c rend.c $(CFLAGS)
