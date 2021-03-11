@@ -10,12 +10,16 @@ int updatePositions(ENTITY* player, ENTITY** ents, BULLET** bullets){
 	if(player != NULL){
 		player->hb->x += player->dir[0];
 		player->hb->y += player->dir[1];
+		player->mid->x += player->dir[0];
+		player->mid->y += player->dir[1];
 	}
 	//update enemy position
 	for(int i = 0; i < MAX_ENTITYS; i++){
 		if(ents[i] != NULL){
 			ents[i]->hb->x += ents[i]->dir[0];
 			ents[i]->hb->y += ents[i]->dir[1];
+			ents[i]->mid->x += ents[i]->dir[0];
+			ents[i]->mid->y += ents[i]->dir[1];
 		}
 		
 	}
@@ -50,6 +54,7 @@ ENTITY* createEntity(int x, int y,int w, int h, int hp, int de, int wpn){
 	e->dir[0] = 0;
 	e->dir[1] = 0;
 	e->hb = rect;
+	e->mid = getmid(e->hb);
 	e->health = hp;
 	e->deathevent = de;
 	e->weapon = wpn;
@@ -75,9 +80,14 @@ int addBullet(BULLET** bullets, BULLET* bullet){
 
 BULLET* createBullet(int wpn, int* dir){
 	BULLET* bullet = (BULLET*)malloc(sizeof(BULLET));
+	SDL_Rect* b = malloc(sizeof(SDL_Rect));
+	bullet->hb = b;
 	int mult = 1;
 	switch(wpn){
 		case 0:
+			bullet->dmg = 5;
+			bullet->hb->w = 10;
+			bullet->hb->h = 10;
 			break;
 		case 1:
 			break;
@@ -95,18 +105,36 @@ void destroyBullet(BULLET** bullets, int i){
 	
 }
 
+int ggT(int a, int b){
+	if(b == 0){
+		return a;
+	}
+	return ggT(b,a%b);
+}
+
 int getDirVector(int* dir, int sx, int sy, int dx, int dy){
 	int x = dx - sx;
 	int y = dy - sy;
-	float length = sqrt((x^2) + (y^2));
-	if(length >= 1){
-		dir[0] = x/(int)length;
-		dir[1] = y/(int)length;
-	}
-	else{
-		printf("division by 0\n");
-		return 1;
-	}
-	
+	int gcd = ggT(x,y);
+	dir[0] = x / gcd;
+	dir[1] = y / gcd;
+	return 0;
+}
+
+SDL_Point* getmid(SDL_Rect* rect){
+	SDL_Point* p = malloc(sizeof(SDL_Point));
+	p->x = rect->x + rect->w/2;
+	p->y = rect->y + rect->h/2;
+	return p;
+}
+
+int shoot(ENTITY* e, SDL_Point* p, BULLET** bulletlist){
+	int dir[2];
+	SDL_Point* m = getmid(e->hb);
+	getDirVector(dir,m->x,m->y,p->x,p->y);
+	BULLET* b = createBullet(0,dir);
+	b->hb->x = m->x + dir[0];
+	b->hb->y = m->y + dir[1];
+	addBullet(bulletlist,b);
 	return 0;
 }

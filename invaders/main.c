@@ -46,6 +46,7 @@ int main(void){
 		printf("couldnt add enemy");
 		return 1;
 	}
+	SDL_Point* mouse = malloc(sizeof(SDL_Point));
 	
 /*
 	SDL_Color red = {255,0,0,255};	
@@ -56,6 +57,7 @@ int main(void){
 	while( !quit ){
 		
 	SDL_RenderClear(rend);
+	SDL_GetMouseState(&mouse->x, &mouse->y);
 		while(SDL_PollEvent(&e)){
 			switch(e.type){
 				case SDL_QUIT:
@@ -101,10 +103,21 @@ int main(void){
 							break;
 					}
 					break;
+				case SDL_MOUSEBUTTONDOWN:
+					switch(e.button.button){
+						case SDL_BUTTON_LEFT:
+							printf("%dx, %dy, %dgcd\n",mouse->x,mouse->y,ggT(mouse->x,mouse->y));
+							shoot(player,mouse,bulletlist);
+							break;
+						
+					}
+					break;
+				
 			}
 		}
 	updatePositions(player,enemies,bulletlist);
 	renderEntities(rend,enemies,player);
+	renderBullets(rend,bulletlist);
 	SDL_RenderPresent(rend);
 	SDL_Delay(1000/60);
 	}

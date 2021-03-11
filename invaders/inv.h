@@ -19,6 +19,7 @@ typedef struct bullet{
 
 typedef struct entity{
 	SDL_Rect* hb, wpn;
+	SDL_Point* mid;
 	int dir[2], reldir[2], atk, health, deathevent, weapon;
 	ITEM* items[ITEM_CAP];
 }ENTITY;
@@ -35,6 +36,10 @@ int addEnemy(ENTITY** ents, ENTITY* e);
 BULLET* createBullet(int wpn, int* dir);
 void destroyBullet(BULLET** bullets, int i);
 int addBullet(BULLET** bullets, BULLET* bullet);
+int ggT(int a, int b);
 int getDirVector(int* dir, int sx, int sy, int dx, int dy);
+SDL_Point* getmid(SDL_Rect* rect);
+int shoot(ENTITY* e, SDL_Point *p, BULLET** bulletlist);
 
 int renderEntities(SDL_Renderer* rend, ENTITY** entities, ENTITY* player);
+int renderBullets(SDL_Renderer* rend,BULLET** bulletlist);
